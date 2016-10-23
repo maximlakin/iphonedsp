@@ -83,22 +83,23 @@ class ViewController: UIViewController, AVAudioRecorderDelegate {
             try session.setActive(true)
             // 3. set up a high-quality recording session
             let settings = [
-                AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+                AVFormatIDKey: Int(kAudioFormatAppleLossless),
                 AVSampleRateKey: 44100,
-                AVNumberOfChannelsKey: 2,
+                AVNumberOfChannelsKey: 1,
                 AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
             ]
             // 4. create the audio recording, and assign ourselves as the delegate
             audioRec = try AVAudioRecorder(url: audioUrl, settings: settings)
             audioRec?.delegate = self
             audioRec?.record()
-            let when = DispatchTime.now() + 3 // change 2 to desired number of seconds
+            playSound()
+            let when = DispatchTime.now() + 1 // change 2 to desired number of seconds
             DispatchQueue.main.asyncAfter(deadline: when) {
                 // Your code with delay
                 print("should stop")
                 self.audioRec?.stop()
             }
-            playSound()
+            
           
         } 
         catch let error {
