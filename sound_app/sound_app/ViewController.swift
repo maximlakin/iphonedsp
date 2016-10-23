@@ -13,8 +13,7 @@ class ViewController: UIViewController, AVAudioRecorderDelegate {
     var audioRec: AVAudioRecorder?
     let audioUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("sound.m4a")
     var player: AVAudioPlayer?
-    
-    func playSound() {
+    func prepareSound() {
         let url = Bundle.main.url(forResource: "beep-01a", withExtension: "wav")!
         
         do {
@@ -22,13 +21,15 @@ class ViewController: UIViewController, AVAudioRecorderDelegate {
             guard let player = player else { return }
             
             player.prepareToPlay()
-            player.play()
+           
         } catch let error as NSError {
             print(error.description)
         }
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        prepareSound()
         AVAudioSession.sharedInstance().requestRecordPermission () {
             [unowned self] allowed in
             if allowed {
@@ -92,7 +93,7 @@ class ViewController: UIViewController, AVAudioRecorderDelegate {
             audioRec = try AVAudioRecorder(url: audioUrl, settings: settings)
             audioRec?.delegate = self
             audioRec?.record()
-            playSound()
+            self.player?.play()
             let when = DispatchTime.now() + 1 // change 2 to desired number of seconds
             DispatchQueue.main.asyncAfter(deadline: when) {
                 // Your code with delay
